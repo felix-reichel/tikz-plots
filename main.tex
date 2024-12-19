@@ -1,0 +1,150 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{charter}
+\usepackage[a4paper, margin=0.5in]{geometry}
+
+
+\title{tikz Plots}
+\author{FR }
+\date{December 2024}
+
+\begin{document}
+
+\maketitle
+
+
+
+\newpage
+
+\section{Observational Unit Selection Criteria - Product Selection Strategies}
+\label{fig:slectcrit}
+\begin{center}
+
+\begin{tikzpicture}[scale=0.67]
+
+
+
+
+% Axes
+\draw[->, thick] (-11,0) -- (11,0) node[right] {$t_\text{rel}$};
+\draw[->, thick] (0,-0.5) -- (0,14.5) node[above] {\textbf{Outcome Var, $clicks_\text{ijt,s}$}};
+
+% Indicate Full Range of -26 to +26
+\draw[dashed] (-10,0) -- (-11,0);
+\draw[dashed] (10,0) -- (11,0);
+\node[below] at (-11,-0.2) {\textbf{-26}};
+\node[below] at (11,-0.2) {\textbf{+26}};
+\node[below] at (0,-0.9) {\textit{\small Full Range: -26 to +26 Weeks around the seal was issued}};
+
+\node[below] at (0,-1.5) {\textit{\small (Truncated observation window covering 99.99999\% of products within their respective PLC)}};
+
+\node[below] at (0,-2.1) {\textit{\small It remains unknown when the seal was truly visible on page for each offered product $i$ by retailer $j \in J_\text{Seal}$ }};
+
+% X-axis ticks and labels
+\foreach \x in {-10, -5, 0, 5, 10} {
+    \draw (\x,0.1) -- (\x,-0.1);
+    \node[below] at (\x,-0.3) {\textbf{\x}};
+}
+
+% Overlapping Product Life Cycles (Background Annotation)
+\node[gray!10] at (0,8) {\Huge \textbf{Overlapping Product Life Cycles}};
+
+% Overlapping Product Life Cycles (Grey Curves)
+\foreach \shift in {-4, -2, 0, 2, 4} {
+    \draw[gray!30, thick] plot[smooth] coordinates {
+        (-8+\shift,0.5) (-6+\shift,3) (-4+\shift,5) (-2+\shift,7) 
+        (0+\shift,8) (2+\shift,7) (4+\shift,5) (6+\shift,3) (8+\shift,0.5)};
+}
+
+
+\node[gray!20] at (0,8) {\Huge \textbf{Overlapping Product Life Cycles}};
+
+\node[pink!90] at (0,4) {\small \textbf{Possible Competing  Pre-Events (Unobserved Confounding)}};
+
+% Competing Events (Black Curves)
+\foreach \shift in {-4, -2, 0, 2, 4} {
+    \draw[pink!90, thick] plot[smooth] coordinates {
+        (-7.8+\shift,0.5) (-6.2+\shift,3) (-4.4+\shift,5) (-2.4+\shift,7)};
+}
+
+% TopN Short Window (blue curve)
+\draw[blue, thick] plot[smooth] coordinates {
+    (-4,8.5) (-2,9.2) (0,10) (2,9.2) (4,8.5)};
+\node[blue] at (0,13.5) {\small \textbf{I. TopN Clicked  Short Window Products Selection}};
+\node[blue] at (0,12.9) {\scriptsize Parameters: Max Products = 200, Other Firms = 10};
+\node[blue] at (0,12.4) {\scriptsize Sym. Cont. Offered Weeks Criteria = 4, Sym. Total Weeks Truncation = 26};
+
+% Random Product Selection (green line)
+\draw[green!70!black, thick] plot[smooth] coordinates {
+    (-11,5.5) (-5,5.2) (0,5) (5,4.7) (11,4.5)};
+\node[green!70!black] at (0,6.5) {\small \textbf{III. Random Products Selection}};
+\node[green!70!black] at (0,6) {\scriptsize Parameters: Max Products = 400, Other Firms = 20};
+\node[green!70!black] at (0,5.5) {\scriptsize Sym. Cont. offered Weeks Criteria = 4, Sym. Total Weeks Truncation = 26};
+
+% TopN Large Window (red curve)
+\draw[red, thick] plot[smooth] coordinates {
+    (-11,4.0) (-6,6.2) (-4,8) (0,9) (4,8) (6,6.2) (11,4.0)};
+\node[red] at (0,11.2) {\small \textbf{II. TopN Clicked  Large Window Products Selection}};
+\node[red] at (0,10.7) {\scriptsize Parameters: Max Products = 50, Other Firms = 20};
+\node[red] at (0,10.3) {\scriptsize Sym. Cont. Offered Weeks Criteria = 4, Total Weeks = 26 Trunctation};
+
+% Counterfactuals (orange line)
+\draw[orange, thick] plot[smooth] coordinates {
+    (-11,2.0) (-5,1.8) (0,1.6) (5,1.5) (11,1.45)};
+\node[orange] at (0,2.5) {\small 
+\textbf{Counterfactuals (Other firms offering the same product)}};
+\node[orange] at (0,2.0) {\scriptsize{Max. N Other Firms: Deterministically, Randomly drawn}};
+
+% Mean Differences (Dotted Lines to Counterfactuals)
+\draw[dotted, thick] (-4,10) -- (-4,0);
+\draw[dotted, thick] (4,10) -- (4,0);
+\draw[dotted, thick] (-10,6.0) -- (-10,0);
+\draw[dotted, thick] (10,6.0) -- (10,0.0);
+
+% Labels for Mean Differences
+\node at (-5.0,1.0) {\scriptsize $t_\text{rel}=-4$};
+\node at (5.0,1.0) {\scriptsize $t_\text{rel}=+4$};
+
+% Rho Estimates (Example Estimates)
+\draw[->, thick, dashed] (-4,10.2) -- (-4,8.5);
+\node at (-5.5,9.5) {\scriptsize $\hat{\Delta}_\text{pre} = 0.75$};
+\node at (-6.2,8.9) {\scriptsize $\hat{\delta}_\text{2x2DiD} = \hat{\Delta}_\text{post} - \hat{\Delta}_\text{pre}$};
+
+\draw[->, thick, dashed] (4,10.2) -- (4,8.5);
+\node at (5.5,9.5) {\scriptsize $\hat{\Delta}_\text{post} = 0.80$};
+
+%\draw[->, thick, dashed] (0,11) -- (0,9.2);
+%\node at (-1.5,10.3) {\scriptsize $\rho = 0.85$};
+
+% Legend Box
+\draw[fill=white] (6.75,8.5) rectangle (11,11.5);
+\node[blue] at (8.5,11.0) {\scriptsize TopN Short Window};
+\node[green!70!black] at (8.5,10.5) {\scriptsize Random Selection};
+\node[red] at (8.5,10.0) {\scriptsize TopN Large Window};
+\node[orange] at (8.5,9.5) {\scriptsize Counterfactuals};
+\node[black] at (8.9,9.0) {\scriptsize Product Life Cycles (PLC)};
+
+\end{tikzpicture}
+
+
+\end{center}
+An Illustration of 3 different Observation Unit Selection Criteria - \textbf{Product Selection Strategies.}
+\textit{
+Namely: 
+\textbf{I. TopN Clicked Short Window Products Selection}
+(Parameters: Max Products = 200, Other Firms = 10
+Sym. Cont. Offered Weeks Criteria = 4, Sym. Total Weeks Truncation = 26),
+\textbf{II. TopN Clicked Large Window Products Selection}
+(Parameters: Max Products = 50, Other Firms = 20
+Sym. Cont. Offered Weeks Criteria = 4, Total Weeks = 26 Trunctation),
+\textbf{III. Random Products Selection}
+(Parameters: Max Products = 400, Other Firms = 20
+Sym. Cont. offered Weeks Criteria = 4, Sym. Total Weeks Truncation = 26),
+\textbf{Counterfactuals} (Other firms offering the same product)
+Max. N Other Firms: Deterministically, Randomly drawn for dataset replication.
+}
+
+
+\end{document}
